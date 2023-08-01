@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1 {
+    margin: 20px;
+  }
+  
+  .game-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .gameboard {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(10, 30px);
+    gap: 2px;
+    border: 1px solid #333;
+    margin: 10px;
+  }
+  
+  .cell {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .miss {
+    background-color: #a0a0a0;
+  }
+  
+  .ship {
+    background-color: #8bc34a;
+  }
+  
+  .hit {
+    background-color: #ff5722;
+  }
+  
+  /* To reveal opponent's ships */
+  #gameboard2 .ship {
+    background-color: #8bc34a;
+  }
+  
