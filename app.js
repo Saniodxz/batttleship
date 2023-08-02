@@ -130,7 +130,18 @@ const app = (() => {
   function renderGameboard(gameboard, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = "";
+    const shipCounter = document.createElement("div");
+  shipCounter.classList.add("ship-counter");
+  shipCounter.innerText = `Ships: ${countShips(gameboard.board)}`;
+  container.appendChild(shipCounter);
+  const shipCounterPlayer1 = document.getElementById("ship-counter-player1");
+  const shipCounterPlayer2 = document.getElementById("ship-counter-player2");
 
+  if (containerId === "gameboard1") {
+    shipCounterPlayer1.innerText = `Ships: ${countShips(gameboard.board)}`;
+  } else if (containerId === "gameboard2") {
+    shipCounterPlayer2.innerText = `Ships: ${countShips(gameboard.board)}`;
+  }
     for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
           const cell = document.createElement('div');
@@ -153,27 +164,41 @@ const app = (() => {
 
 
 
-        cell.addEventListener("click", () => {
-          if (containerId === "gameboard2") {
-            // Player attacks opponent's gameboard
-            if (
-              !cell.classList.contains("miss") &&
-              !cell.classList.contains("hit")
-            ) {
-              const result = player2Gameboard.receiveAttack(row, col);
-              cell.classList.add(result);
-              checkGameEnd();
+          cell.addEventListener("click", () => {
+            if (containerId === "gameboard2") {
+              // Player attacks opponent's gameboard
+              if (
+                !cell.classList.contains("miss") &&
+                !cell.classList.contains("hit")
+              ) {
+                const result = player2Gameboard.receiveAttack(row, col);
+                cell.classList.add(result);
+                const shipCounter = document.querySelector(`#${containerId} .ship-counter`);
+                shipCounter.innerText = `Ships: ${countShips(player2Gameboard.board)}`;
+                checkGameEnd();
+              }
             }
-          }
-        });
+          });
 
         container.appendChild(cell);
       }
     }
   }
+  function countShips(board) {
+    let count = 0;
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        if (board[row][col] !== null && board[row][col] !== "miss") {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
   function checkGameEnd() {
     if (player2Gameboard.allShipsSunk()) {
       alert("You win! Game over.");
+      document.getElementById("play-again").style.display = "block";
     } else {
       // Computer makes a random play after player's turn
       const { row, col } = player1.makeRandomPlay();
@@ -182,13 +207,14 @@ const app = (() => {
       cell.classList.add(result);
       if (player1Gameboard.allShipsSunk()) {
         alert("Computer wins! Game over.");
+        document.getElementById("play-again").style.display = "block";
       }
     }
   }
-  const randomizeShipsButton = document.getElementById("randomize-ships");
-  randomizeShipsButton.addEventListener("click", () => {
-    randomizePlayer1Ships();
-  });
+//   const randomizeShipsButton = document.getElementById("randomize-ships");
+//   randomizeShipsButton.addEventListener("click", () => {
+//     randomizePlayer1Ships();
+//   });
 
   function randomizePlayer1Ships() {
     const shipLengths = [5, 4, 3, 3, 2]; // Lengths of the ships
@@ -207,6 +233,60 @@ const app = (() => {
 
     renderGameboard(player1Gameboard, "gameboard1");
   }
+  function randomizePlayer2Ships() {
+    const shipLengths = [5, 4, 3, 3, 2]; // Lengths of the ships
+    player2Gameboard.clearBoard(); // Clear the gameboard before placing ships
+
+    for (const length of shipLengths) {
+      let row, col, isVertical;
+      do {
+        row = Math.floor(Math.random() * 10);
+        col = Math.floor(Math.random() * 10);
+        isVertical = Math.random() < 0.5;
+      } while (
+        !player2Gameboard.placeShip(new Ship(length), row, col, isVertical)
+      );
+    }
+  }
+  function resetPlayer2Gameboard() {
+    player2Gameboard.clearBoard();
+    randomizePlayer2Ships(); // Randomize ships for player2
+    renderGameboard(player2Gameboard, "gameboard2");
+  }
+
+  // Function to start a new game by resetting both gameboards
+  function startNewGame() {
+    player1Gameboard.clearBoard();
+    player2Gameboard.clearBoard();
+    randomizePlayer1Ships(); // Randomize ships for player1
+    randomizePlayer2Ships(); // Randomize ships for player2
+    renderGameboards();
+    document.getElementById("play-again").style.display = "none";
+  }
+
+  // Add event listeners to buttons
+  const randomizeShipsButton = document.getElementById("randomize-ships");
+  randomizeShipsButton.addEventListener("click", () => {
+    randomizePlayer1Ships();
+  });
+
+  const resetPlayer2Button = document.getElementById("reset-player2");
+  resetPlayer2Button.addEventListener("click", () => {
+    resetPlayer2Gameboard();
+  });
+
+  const newGameButton = document.getElementById("new-game");
+  newGameButton.addEventListener("click", () => {
+    startNewGame();
+  });
+  // Add event listener to the "Play Again" button
+const playAgainButton = document.getElementById("play-again");
+playAgainButton.addEventListener("click", () => {
+  startNewGame();
+  playAgainButton.style.display = "none"; // Hide the "Play Again" button after clicking
+});
+
+  
   // Initialize the game
   function init() {
     renderGameboards();
