@@ -5,21 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Battleships</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Battleships</h1>
-  <div class="game-container">
-    <div id="gameboard1" class="gameboard"></div>
-    <div id="gameboard2" class="gameboard"></div>
+  <h1>Space Battleships</h1>
+
+  <div id="game-mode-selection">
+    <label for="game-mode">Choose Game Mode:</label>
+    <select id="game-mode">
+      <option value="computer">Player vs Computer</option>
+      <option value="player">Player vs Player</option>
+    </select>
+    <button id="start-game">Start Game</button>
   </div>
-  <div class="ship-counter-container">
+
+  <div class="game-container" style="display: none;">
+    <div class="gameboard-container">
+      <div id="gameboard1" class="gameboard"></div>
+      <div id="gameboard2" class="gameboard"></div>
+    </div>
+  </div>
+  
+  <div class="ship-counter-container" style="display: none;">
     <div id="ship-counter-player1" class="ship-counter">Ships: 0</div>
     <div id="ship-counter-player2" class="ship-counter">Ships: 0</div>
   </div>
-  <button id="randomize-ships">Randomize Player 1's Ships</button>
-  <button id="reset-player2">Reset Player 2's Gameboard</button>
-  <button id="new-game">New Game</button>
-  <button id="play-again" style="display: none;">Play Again</button>
+  
+  <div class="button-container">
+    <button id="randomize-ships" style="display: none;">Randomize Player 1's Ships</button>
+    <button id="reset-player2" style="display: none;">Reset Player 2's Gameboard</button>
+    <button id="new-game" style="display: none;">New Game</button>
+    <button id="play-again" style="display: none;">Play Again</button>
+  </div>
+  
   <script src="app.js"></script>
 </body>
 </html>

@@ -263,6 +263,38 @@ const app = (() => {
     renderGameboards();
     document.getElementById("play-again").style.display = "none";
   }
+  let isPlayerVsComputer = true;
+
+  function startGame() {
+    const gameModeSelection = document.getElementById("game-mode-selection");
+    const gameContainer = document.querySelector(".game-container");
+    const shipCounterContainer = document.querySelector(".ship-counter-container");
+    const randomizeShipsButton = document.getElementById("randomize-ships");
+    const resetPlayer2Button = document.getElementById("reset-player2");
+    const newGameButton = document.getElementById("new-game");
+    const playAgainButton = document.getElementById("play-again");
+
+    isPlayerVsComputer = document.getElementById("game-mode").value === "computer";
+
+    gameModeSelection.style.display = "none";
+    gameContainer.style.display = "block";
+    shipCounterContainer.style.display = "flex";
+    randomizeShipsButton.style.display = "block";
+    resetPlayer2Button.style.display = "block";
+    newGameButton.style.display = "block";
+    playAgainButton.style.display = "none";
+
+    randomizePlayer1Ships();
+    if (isPlayerVsComputer) {
+      randomizePlayer2Ships();
+    }
+
+    renderGameboards();
+  }
+
+  const startGameButton = document.getElementById("start-game");
+  startGameButton.addEventListener("click", startGame);
+  
 
   // Add event listeners to buttons
   const randomizeShipsButton = document.getElementById("randomize-ships");
@@ -289,6 +321,8 @@ playAgainButton.addEventListener("click", () => {
   
   // Initialize the game
   function init() {
+    randomizePlayer1Ships();
+  randomizePlayer2Ships();
     renderGameboards();
 
     //   For demonstration, make random plays
